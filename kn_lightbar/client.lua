@@ -5,7 +5,7 @@ Citizen.CreateThread(function()
   while ESX == nil do
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
-    while PlayerData.job == nil do
+    while true do
       Citizen.Wait(0)
       PlayerData = ESX.GetPlayerData()
     end
@@ -418,11 +418,13 @@ end)
 
 RegisterNetEvent("lightbar:lightbar:itemUse")
 AddEventHandler("lightbar:lightbar:itemUse", function(playerId)
-  if PlayerData.job ~= nil and PlayerData.job.name == Config.Job and PlayerData.job.grade >= Config.Rank then
-    SetNuiFocus(true, true)
-    SendNUIMessage({
-      action = 'open'
-    })
+  if IsPedInAnyVehicle(PlayerPedId(), false) then
+    if PlayerData.job ~= nil and PlayerData.job.name == Config.Job and PlayerData.job.grade >= Config.Rank then
+      SetNuiFocus(true, true)
+      SendNUIMessage({
+        action = 'open'
+      })
+    end
   end
 end)
 
