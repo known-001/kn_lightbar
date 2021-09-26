@@ -6,10 +6,10 @@ Citizen.CreateThread(function()
     TriggerEvent('esx:getSharedObject', function(obj) ESX = obj end)
 
     while PlayerData.job == nil do
+      Citizen.Wait(0)
       PlayerData = ESX.GetPlayerData()
     end
 
-    Citizen.Wait(0)
   end
 end)
 
@@ -96,8 +96,6 @@ function printControlsText()
                 AddTextComponentString("and Insert and Delete for rotation. SPACE to save, DELETE to cancel")
                 DrawText(0.25, 0.93)
 end
-  
-
 
 function toggleLights()
   local player = GetPlayerPed(-1)
@@ -169,14 +167,14 @@ function spawnLightbar(lightbarModel)
   local vehiclehash1 = GetHashKey(lightbarModel)
   RequestModel(vehiclehash1)
   Citizen.CreateThread(function() 
-      while not HasModelLoaded(vehiclehash1) do
-          Citizen.Wait(100)
-      end
-      local coords = GetEntityCoords(player)
-      newVeh = CreateVehicle(vehiclehash1, coords.x, coords.y, coords.z, GetEntityHeading(PlayerPedId()), true, 0)
-      SetEntityCollision(newVeh, false, false)
-      SetVehicleDoorsLocked(newVeh, 2)
-      SetEntityAsMissionEntity(newVeh, true, true)
+    while not HasModelLoaded(vehiclehash1) do
+      Citizen.Wait(100)
+    end
+    local coords = GetEntityCoords(player)
+    newVeh = CreateVehicle(vehiclehash1, coords.x, coords.y, coords.z, GetEntityHeading(PlayerPedId()), true, 0)
+    SetEntityCollision(newVeh, false, false)
+    SetVehicleDoorsLocked(newVeh, 2)
+    SetEntityAsMissionEntity(newVeh, true, true)
   end)
 end
 
@@ -193,7 +191,14 @@ function lightMenu(lightbarModel)
       --resetOffSets()
       moveObj(newVeh)
       if (IsControlJustReleased(1, 22)) then -- attatch obj and close
-        TriggerServerEvent("lightbar:addLightbar", GetVehicleNumberPlateText(GetVehiclePedIsIn(player, false)), VehToNet(newVeh), GetVehiclePedIsIn(player, false))
+        local coords1 = {
+          yrot = yrot,
+          zrot = zrot,
+          x = xCoord,
+          y = yCoord,
+          z = zCoord
+        }
+        TriggerServerEvent("lightbar:addLightbar", GetVehicleNumberPlateText(GetVehiclePedIsIn(player, false)), VehToNet(newVeh), GetVehiclePedIsIn(player, false), lightbarModel, coords1, true)
         inLightbarMenu = false
         newVeh=nil
         controlsDisabled = false
