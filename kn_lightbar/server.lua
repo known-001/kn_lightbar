@@ -42,7 +42,7 @@ AddEventHandler("lightbar:ToggleSound1Server", function(plate)
 		if v["LP"] == plate then
 			toggle = not v.sirenStatus
 			v.sirenStatus = toggle
-			TriggerClientEvent("lightbar:sound1Client", -1, source, toggle)
+			TriggerClientEvent("lightbar:sound1Client", source, source, toggle)
 		end
 	end
 end)
